@@ -12,38 +12,6 @@ app.post('/upload', (req, res) => {
 	const hash = crypto.createHash('sha256').update(req.files.foo.data).digest('hex');
 	res.json(hash);
 });
-app.listen(8080, () => {
+app.listen(process.env.PORT, () => {
 	console.log('server running');
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// window.addEventListener('load', function() {
-
-//   if (typeof web3 !== 'undefined') {
-//     // Use Mist/MetaMask's provider
-
-
-//   } else {
-// 	console.log("install metamask")
-//   }
-
-// })
+});
