@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Blockchain file verification</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300" type="text/css" />
+</head>
+<body>
+	<div class="container is-text-centered" style="padding:1em">
+			<h1 class="is-size-1">CheckPoint</h1>
+	</div>
+<div class="container">
+	<div class="columns">
+			<div class="column is-half">
+					<div class="section" style="background-color: rgba(255,255,255,0.2); margin-top:5em; border-radius: 5px; text-align:center">
+							<form action="/upload" method="POST" enctype="multipart/form-data" style="display:block">
+								<div class="file">
+									<label class="file-label">
+									  <input class="file-input" type="file" name="foo">
+									  <span class="file-cta">
+										<span class="file-icon">
+										  <i class="fas fa-upload"></i>
+										</span>
+										<span class="file-label">
+										  Choose a file…
+										</span>
+									  </span>
+									</label>
+								  </div>
+								  <div class="field">
+									  <div class="control">
+											<input type="submit" value="Submit" class="button is-link" style="margin-top:1em">
+									  </div>
+								  </div>
+							</form>
+						</div>
+			</div>
+			<div class="column is-half">
+					<div class="section" style="background-color: rgba(255,255,255,0.2); margin-top:5em; border-radius:5px">
+							<form action="/upload" method="POST" enctype="multipart/form-data" style="display:block">
+								  <div class="field">
+										<label class="label">Public key</label>
+										<div class="control">
+										  <input class="input" type="text" placeholder="Text input">
+										</div>
+										<p class="help">This is a help text</p>
+									  </div>
+									  <div class="file">
+											<label class="file-label">
+											  <input class="file-input" type="file" name="foo">
+											  <span class="file-cta">
+												<span class="file-icon">
+												  <i class="fas fa-upload"></i>
+												</span>
+												<span class="file-label">
+												  Choose a file…
+												</span>
+											  </span>
+											</label>
+										  </div>
+								  <div class="field">
+									  <div class="control">
+											<input type="submit" value="Submit" class="button is-link" style="margin-top:1em">
+									  </div>
+								  </div>
+							</form>
+						</div>
+			</div>
+	</div>
+</div>
+<script src="js/web3.js"></script>
+<script>
+window.addEventListener('load', function() {
+	const abi = [
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "fileHash",
+				"type": "string"
+			}
+		],
+		"name": "set",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "fileHash",
+				"type": "string"
+			},
+			{
+				"name": "_toVerify",
+				"type": "address"
+			}
+		],
+		"name": "get",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+const addr = "0x415EF6d747F7B6858233D47617FE4eFc39F1De7F";
+
+// Checking if Web3 has been injected by the browser (Mist/MetaMask)
+  if (typeof web3 !== 'undefined') {
+    // Use Mist/MetaMask's provider
+	web3 = new Web3(web3.currentProvider);
+	console.log(web3.currentProvider);
+	const contract = new web3.eth.Contract(abi, addr);
+	console.log(contract);
+	console.log(contract.methods);
+	contract.methods.set("abc").send();
+
+  } else {
+    // Handle the case where the user doesn't have web3. Probably 
+    // show them a message telling them to install Metamask in 
+    // order to use our app.
+    // For example
+	// web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+	console.log("install metamask")
+  }
+
+  // Now you can start your app & access web3js freely:
+
+})
+</script>
+
+</body>
+</html>
