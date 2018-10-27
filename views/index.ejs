@@ -14,6 +14,10 @@
 </head>
 
 <body>
+	<div class="notification is-success hidden" style="position:sticky; top:0;">
+		<button class="delete"></button>
+		File verification successful
+	</div>
 	<div class="container" style="padding-top:5em">
 		<div class="columns">
 			<div class="column is-one-third" style="background-color:rgba(255,255,255,.3);margin:1em;border-radius: 5px">
@@ -203,6 +207,9 @@
 		});
 		document.querySelector('#verify').addEventListener('click', function () {
 			makegetreq('455dc2b320ebacbdfd05a819e30ac80dc814851209dc4cf23a8c16e8815817e5', '0x6Fe79724E27f745A9c6A66E119A672d63129e6BB');
+			setTimeout(() => {
+				document.querySelector('.notification').classList.remove('hidden');
+			}, 1200);
 		});
 
 
