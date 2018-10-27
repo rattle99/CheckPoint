@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns"
+	 crossorigin="anonymous">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300" type="text/css" />
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+	<div class="container" style="padding-top:5em">
+		<div class="columns">
+			<div class="column is-one-third" style="background-color:rgba(255,255,255,.3);margin:1em;border-radius: 5px">
+				<p class="is-size-1">Submit</p>
+				<form enctype="multipart/form-data" id="submit-form">
+					<div class="file">
+						<label class="file-label">
+							<input class="file-input" type="file" name="foo">
+							<span class="file-cta">
+								<span class="file-icon">
+									<i class="fas fa-upload"></i>
+								</span>
+								<span class="file-label">
+									Choose a file…
+								</span>
+							</span>
+						</label>
+					</div>
+					<div class="field">
+						<div class="control">
+							<button class="button is-link" style="margin-top:.8em" id="submit">Submit</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="column is-half" style="background-color:rgba(255,255,255,.3);margin:1em;border-radius:5px;">
+				<form enctype="
+			 multipart/form-data" id="verify-form">
+					<p class="is-size-1">Verify</p>
+					<div class="field">
+						<label class="label">Public Key</label>
+						<div class="control">
+							<input class="input" type="text" placeholder="Public Key">
+						</div>
+					</div>
+					<!-- <input type="text" name="public-key"> -->
+					<div class="file">
+						<label class="file-label">
+							<input class="file-input" type="file" name="foo">
+							<span class="file-cta">
+								<span class="file-icon">
+									<i class="fas fa-upload"></i>
+								</span>
+								<span class="file-label">
+									Choose a file…
+								</span>
+							</span>
+						</label>
+					</div>
+					<!-- <input type="file" name="foo"> -->
+					<!-- <input type="submit"> -->
+
+					<div class="field">
+						<div class="control">
+							<button class="button is-link" style="margin-top:.8em" id="verify">Submit</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script src="js/web3.js"></script>
+	<script>
+
+		function checkinput() {
+			fileInput = document.querySelector('#file-input');
+			if (fileInput.files.length <= 0) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+
+		function makesetreq(hash) {
+			const abi = [
+				{
+					"constant": false,
+					"inputs": [
+						{
+							"name": "fileHash",
+							"type": "string"
+						}
+					],
+					"name": "set",
+					"outputs": [],
+					"payable": false,
+					"stateMutability": "nonpayable",
+					"type": "function"
+				},
+				{
+					"constant": true,
+					"inputs": [
+						{
+							"name": "fileHash",
+							"type": "string"
+						},
+						{
+							"name": "_toVerify",
+							"type": "address"
+						}
+					],
+					"name": "get",
+					"outputs": [
+						{
+							"name": "",
+							"type": "bool"
+						},
+						{
+							"name": "",
+							"type": "uint256"
+						}
+					],
+					"payable": false,
+					"stateMutability": "view",
+					"type": "function"
+				}
+			];
+			const addr = "0x415EF6d747F7B6858233D47617FE4eFc39F1De7F";
+			web3 = new Web3(web3.currentProvider);
+			const contract = new web3.eth.Contract(abi, addr);
+			var userAddress;
+			var w = web3.eth.getAccounts().then(res => {
+				userAddress = res[0];
+				contract.methods.set(hash).send({ from: userAddress.toString(), gas: 2000000, gasPrice: '30000000' });
+			});
+		}
+		function makegetreq(hash, pubkey) {
+			const abi = [
+				{
+					"constant": false,
+					"inputs": [
+						{
+							"name": "fileHash",
+							"type": "string"
+						}
+					],
+					"name": "set",
+					"outputs": [],
+					"payable": false,
+					"stateMutability": "nonpayable",
+					"type": "function"
+				},
+				{
+					"constant": true,
+					"inputs": [
+						{
+							"name": "fileHash",
+							"type": "string"
+						},
+						{
+							"name": "_toVerify",
+							"type": "address"
+						}
+					],
+					"name": "get",
+					"outputs": [
+						{
+							"name": "",
+							"type": "bool"
+						},
+						{
+							"name": "",
+							"type": "uint256"
+						}
+					],
+					"payable": false,
+					"stateMutability": "view",
+					"type": "function"
+				}
+			];
+			const addr = "0x415EF6d747F7B6858233D47617FE4eFc39F1De7F";
+			web3 = new Web3(web3.currentProvider);
+			const contract = new web3.eth.Contract(abi, addr);
+			contract.methods.get(hash, pubkey).call(function (err, resp) {
+				console.log(resp);
+			});
+		}
+
+		document.querySelector('#submit-form').addEventListener('submit', function (e) {
+			e.preventDefault();
+		});
+		document.querySelector('#verify-form').addEventListener('submit', function (e) {
+			e.preventDefault();
+		});
+		document.querySelector('#submit').addEventListener('click', function () {
+			makesetreq('455dc2b320ebacbdfd05a819e30ac80dc814851209dc4cf23a8c16e8815817e5');
+		});
+		document.querySelector('#verify').addEventListener('click', function () {
+			makegetreq('455dc2b320ebacbdfd05a819e30ac80dc814851209dc4cf23a8c16e8815817e5', '0x6Fe79724E27f745A9c6A66E119A672d63129e6BB');
+		});
+
+
+
+
+	</script>
+</body>
+
+</html>
